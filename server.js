@@ -1,6 +1,11 @@
+require('dotenv').config()
+
 const express = require('express')
-const { reset } = require('nodemon')
 const app = express()
+const jwt = require('jsonwebtoken')
+
+// For the server to be able to parse the body request to json
+app.use(express.json())
 
 const products = [
     {
@@ -15,13 +20,37 @@ const products = [
     }
 ]
 
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if(!token){
+        return res.sendStatus(401)
+    }
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if(err){
+            res.sendStatus(403)
+        }
+        req.user = user
+        next()
+    })
+}
+
 app.get('/', (req, res) => {
-    return res.send("Hello World!!")
+    res.send("Hello World!!")
 })
 
-app.get('/products', (req, res) => {
-    return res.json(products)
+app.get('/products', authenticateToken, (req, res) => {
+    res.json(products)
 })
 
+app.post('/login', (req, res) => {
+    // TODO: Authenticate user.
+
+    const username = req.body.username
+    const user = {name: username}
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+
+    res.json({accessToken})
+})
 
 app.listen(9999)
