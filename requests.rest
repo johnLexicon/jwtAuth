@@ -1,12 +1,30 @@
 GET http://localhost:9999/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid2hvbWV2ZXIiLCJpYXQiOjE2MTE2NTc5OTZ9.pKa-qR-NTptiOPDsBirWjECW-JD0CTvBzw4fU7nfOrU
+Authorization: Bearer 
 
 
 ###
 
-POST http://localhost:9999/login
+POST http://localhost:9998/login
 Content-Type: application/json
 
 {
     "username": "whomever" 
+}
+
+###
+
+POST http://localhost:9998/token
+Content-Type: application/json
+
+{
+    "token": ""
+}
+
+###
+
+DELETE http:/localhost:9998/logout
+Content-Type: application/json
+
+{
+    "token": ""
 }
