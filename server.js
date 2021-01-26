@@ -20,6 +20,14 @@ const products = [
     }
 ]
 
+app.get('/', (req, res) => {
+    res.send("Products path: /products")
+})
+
+app.get('/products', authenticateToken, (req, res) => {
+    res.json(products)
+})
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -34,14 +42,6 @@ function authenticateToken(req, res, next) {
         next()
     })
 }
-
-app.get('/', (req, res) => {
-    res.send("Hello World!!")
-})
-
-app.get('/products', authenticateToken, (req, res) => {
-    res.json(products)
-})
 
 app.post('/login', (req, res) => {
     // TODO: Authenticate user.
